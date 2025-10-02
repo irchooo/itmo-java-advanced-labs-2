@@ -1,8 +1,8 @@
 FROM mvkvl/maven:jdk-21-alpine AS build
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+COPY spring-core/pom.xml .
+COPY spring-core/src ./src
 
 RUN mvn clean install -DskipTests
 
