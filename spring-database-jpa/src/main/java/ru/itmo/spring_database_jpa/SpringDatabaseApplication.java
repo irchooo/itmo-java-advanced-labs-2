@@ -1,4 +1,4 @@
-package ru.itmo.spring_database;
+package ru.itmo.spring_database_jpa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
