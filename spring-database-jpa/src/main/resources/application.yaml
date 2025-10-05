@@ -1,4 +1,7 @@
 spring:
+  sql:
+    init:
+      mode: always
   main:
     banner-mode: off
   application:
@@ -15,6 +18,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
 
 server:
   port: 8090
