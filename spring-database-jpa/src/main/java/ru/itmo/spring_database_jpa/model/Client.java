@@ -3,12 +3,10 @@ package ru.itmo.spring_database_jpa.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -21,7 +19,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "clients")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,13 +29,13 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is mandatory")
-    @Column(unique = true, nullable = false)
+    @Email
+    @NotBlank
+    @Column(unique = true)
     private String email;
 
     private String phone;
@@ -47,6 +44,5 @@ public class Client {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tariff_id")
     private Tariff tariff;
 }

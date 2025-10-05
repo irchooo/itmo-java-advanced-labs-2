@@ -2,6 +2,7 @@ package ru.itmo.spring_database_jpa.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.itmo.spring_database_jpa.dto.ClientDTO;
 import ru.itmo.spring_database_jpa.mapper.ClientMapper;
 import ru.itmo.spring_database_jpa.model.Client;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ClientService {
     private final ClientRepository clientRepository;
     private final TariffRepository tariffRepository;

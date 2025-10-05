@@ -109,9 +109,4 @@ public class TariffService {
         return tariffMapper.toDto(updated);
     }
 
-
-    @Transactional(readOnly = true)
-    public boolean existsById(Long id) {
-        return tariffRepository.existsById(id);
-    }
 }

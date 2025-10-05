@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 public class ClientDTO {
     private Long id;
 
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank
     private String name;
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is mandatory")
+    @Email
+    @NotBlank
     private String email;
 
     private String phone;

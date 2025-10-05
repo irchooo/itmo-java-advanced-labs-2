@@ -8,6 +8,8 @@ import ru.itmo.spring_database_jpa.model.Client;
 public class ClientMapper {
 
     public ClientDTO toDto(Client client) {
+        if (client == null) return null;
+
         return ClientDTO.builder()
                 .id(client.getId())
                 .name(client.getName())
@@ -20,6 +22,8 @@ public class ClientMapper {
     }
 
     public Client toEntity(ClientDTO clientDTO) {
+        if (clientDTO == null) return null;
+
         return Client.builder()
                 .id(clientDTO.getId())
                 .name(clientDTO.getName())
@@ -29,6 +33,8 @@ public class ClientMapper {
     }
 
     public void updateEntityFromDto(ClientDTO clientDTO, Client client) {
+        if (clientDTO == null || client == null) return;
+
         if (clientDTO.getName() != null) {
             client.setName(clientDTO.getName());
         }
