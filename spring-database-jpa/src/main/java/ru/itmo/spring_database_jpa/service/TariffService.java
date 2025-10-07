@@ -4,7 +4,7 @@ package ru.itmo.spring_database_jpa.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmo.spring_database_jpa.dto.TariffDTO;
+import ru.itmo.spring_database_jpa.dto.TariffDto;
 import ru.itmo.spring_database_jpa.mapper.TariffMapper;
 import ru.itmo.spring_database_jpa.model.Tariff;
 import ru.itmo.spring_database_jpa.repository.TariffRepository;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TariffService {
 
     private final TariffRepository tariffRepository;
@@ -23,23 +22,23 @@ public class TariffService {
 
 
     @Transactional(readOnly = true)
-    public List<TariffDTO> findAll() {
+    public List<TariffDto> findAll() {
         return tariffRepository.findAll()
                 .stream()
                 .map(tariffMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
     @Transactional(readOnly = true)
-    public Optional<TariffDTO> findById(Long id) {
+    public Optional<TariffDto> findById(Long id) {
         return tariffRepository.findById(id)
                 .map(tariffMapper::toDto);
     }
 
 
     @Transactional(readOnly = true)
-    public List<TariffDTO> findActiveTariffs() {
+    public List<TariffDto> findActiveTariffs() {
         return tariffRepository.findByIsActiveTrue()
                 .stream()
                 .map(tariffMapper::toDto)
@@ -48,13 +47,13 @@ public class TariffService {
 
 
     @Transactional(readOnly = true)
-    public Optional<TariffDTO> findByName(String name) {
+    public Optional<TariffDto> findByName(String name) {
         return tariffRepository.findByName(name)
                 .map(tariffMapper::toDto);
     }
 
-
-    public TariffDTO create(TariffDTO tariffDTO) {
+    @Transactional
+    public TariffDto create(TariffDto tariffDTO) {
 
         if (tariffRepository.findByName(tariffDTO.getName()).isPresent()) {
             throw new RuntimeException("Tariff with name '" + tariffDTO.getName() + "' already exists");
@@ -66,7 +65,8 @@ public class TariffService {
     }
 
 
-    public TariffDTO update(Long id, TariffDTO tariffDTO) {
+    @Transactional
+    public TariffDto update(Long id, TariffDto tariffDTO) {
         Tariff existing = tariffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tariff not found with id: " + id));
 
@@ -83,7 +83,7 @@ public class TariffService {
         return tariffMapper.toDto(updated);
     }
 
-
+    @Transactional
     public void delete(Long id) {
         if (!tariffRepository.existsById(id)) {
             throw new RuntimeException("Tariff not found with id: " + id);
@@ -91,8 +91,8 @@ public class TariffService {
         tariffRepository.deleteById(id);
     }
 
-
-    public TariffDTO activateTariff(Long id) {
+    @Transactional
+    public TariffDto activateTariff(Long id) {
         Tariff tariff = tariffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tariff not found with id: " + id));
         tariff.setIsActive(true);
@@ -100,13 +100,12 @@ public class TariffService {
         return tariffMapper.toDto(updated);
     }
 
-
-    public TariffDTO deactivateTariff(Long id) {
+    @Transactional
+    public TariffDto deactivateTariff(Long id) {
         Tariff tariff = tariffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tariff not found with id: " + id));
         tariff.setIsActive(false);
         Tariff updated = tariffRepository.save(tariff);
         return tariffMapper.toDto(updated);
     }
-
 }

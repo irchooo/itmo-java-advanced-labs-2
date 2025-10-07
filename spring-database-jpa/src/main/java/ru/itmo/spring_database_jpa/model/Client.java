@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.Email;
@@ -30,12 +29,10 @@ public class Client {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false)
     private String name;
 
     @Email
     @NotBlank
-    @Column(unique = true)
     private String email;
 
     private String phone;

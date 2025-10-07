@@ -1,28 +1,31 @@
 package ru.itmo.spring_database_jpa.dto;
 
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TariffDTO {
+public class ClientDto {
     private Long id;
 
     @NotBlank
     private String name;
 
-    private String description;
+    @Email
+    @NotBlank
+    private String email;
 
-    @DecimalMin("0.0")
-    private BigDecimal price;
+    private String phone;
 
-    private Boolean isActive;
+    private Long tariffId;
+    private String tariffName;
+    private LocalDateTime createdAt;
 }

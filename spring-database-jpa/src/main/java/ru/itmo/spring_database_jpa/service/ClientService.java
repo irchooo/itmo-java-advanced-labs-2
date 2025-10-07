@@ -3,7 +3,7 @@ package ru.itmo.spring_database_jpa.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmo.spring_database_jpa.dto.ClientDTO;
+import ru.itmo.spring_database_jpa.dto.ClientDto;
 import ru.itmo.spring_database_jpa.mapper.ClientMapper;
 import ru.itmo.spring_database_jpa.model.Client;
 import ru.itmo.spring_database_jpa.model.Tariff;
@@ -11,38 +11,39 @@ import ru.itmo.spring_database_jpa.repository.ClientRepository;
 import ru.itmo.spring_database_jpa.repository.TariffRepository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ClientService {
     private final ClientRepository clientRepository;
     private final TariffRepository tariffRepository;
     private final ClientMapper clientMapper;
 
 
-    public List<ClientDTO> findAll() {
+    @Transactional(readOnly = true)
+    public List<ClientDto> findAll() {
         return clientRepository.findAll().stream()
                 .map(clientMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public Optional<ClientDTO> findById(Long id) {
+    @Transactional(readOnly = true)
+    public ClientDto findById(Long id) {
         return clientRepository.findById(id)
-                .map(clientMapper::toDto);
+                .map(clientMapper::toDto)
+                .orElseThrow(() -> new RuntimeException("Client not found with id " + id));
     }
 
-    public ClientDTO create(ClientDTO clientDTO) {
-        if (clientRepository.existsByEmail(clientDTO.getEmail())) {
+    @Transactional
+    public ClientDto create(ClientDto clientDto) {
+        if (clientRepository.existsByEmail(clientDto.getEmail())) {
             throw new RuntimeException("Client with this email already exists");
         }
 
-        Client client = clientMapper.toEntity(clientDTO);
+        Client client = clientMapper.toEntity(clientDto);
 
-        if (clientDTO.getTariffId() != null) {
-            Tariff tariff = tariffRepository.findById(clientDTO.getTariffId())
+        if (clientDto.getTariffId() != null) {
+            Tariff tariff = tariffRepository.findById(clientDto.getTariffId())
                     .orElseThrow(() -> new RuntimeException("Tariff not found"));
             client.setTariff(tariff);
         }
@@ -51,9 +52,10 @@ public class ClientService {
         return clientMapper.toDto(saved);
     }
 
-    public ClientDTO update(Long id, ClientDTO clientDTO) {
+    @Transactional
+    public ClientDto update(Long id, ClientDto clientDTO) {
         Client existing = clientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new RuntimeException("Client not found with id " + id));
 
         clientMapper.updateEntityFromDto(clientDTO, existing);
 
@@ -67,9 +69,10 @@ public class ClientService {
         return clientMapper.toDto(updated);
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!clientRepository.existsById(id)) {
-            throw new RuntimeException("Client not found");
+            throw new RuntimeException("Client not found with id " + id);
         }
         clientRepository.deleteById(id);
     }
