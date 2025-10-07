@@ -7,8 +7,8 @@ services:
       context: .
     depends_on:
       - db
-    #ports:
-    #  - '8090:8090'
+    ports:
+      - '8090:8090'
 
   db:
     image: postgres:17.4-alpine
